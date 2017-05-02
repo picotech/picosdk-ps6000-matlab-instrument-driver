@@ -1,0 +1,12 @@
+# .gitignore file for picosdk-ps6000-matlab-instrument-driver repository
+# Untracked files/folders to ignore.
+
+# Windows platforms
+
+**/.obj
+**/.lib
+**/.exp
+
+# All platforms
+
+**/*.h

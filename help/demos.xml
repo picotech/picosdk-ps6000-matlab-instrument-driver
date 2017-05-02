@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<demos>
+    <name>PicoScope 6000 Series - MATLAB Generic Instrument Driver</name>
+    <type>toolbox</type>
+    <icon>HelpIcon.DEMOS</icon>
+    <description>This toolbox contains a number of examples demonstrating how to call Instrument Driver functions to collect data and also use the signal generator.</description>
+    <website></website>
+    
+    <demosection>
+        <label>Oscilloscopes</label>
+        <demoitem>
+            <label>Oscilloscope Block Data Capture Examplee</label>
+            <type>M-file</type>
+            <source>PS2000A_ID_Block_Example</source>
+        </demoitem>
+        <demoitem>
+            <label>Oscilloscope Block Data Capture with FFT Example</label>
+            <type>M-file</type>
+            <source>PS2000A_ID_Block_FFT_Example</source>
+        </demoitem>
+        <demoitem>
+            <label>Oscilloscope ETS Block Data Capture Examplee</label>
+            <type>M-file</type>
+            <source>PS2000A_ID_ETS_Block_Example</source>
+        </demoitem>
+        <demoitem>
+            <label>Oscilloscope Rapid Block Data Capture Example</label>
+            <type>M-file</type>
+            <source>PS2000A_ID_Rapid_Block_Plot3D_Example</source>
+        </demoitem>
+        <demoitem>
+            <label>Oscilloscope Streaming Data Capture Example</label>
+            <type>M-file</type>
+            <source>PS2000A_ID_Streaming_Example</source>
+        </demoitem>
+        <demoitem>
+            <label>Signal Generator Example</label>
+            <type>M-file</type>
+            <source>PS2000A_ID_Sig_Gen_Example</source>
+        </demoitem>
+
+</demos>

@@ -2297,6 +2297,9 @@ Please also refer to the ps6000SetDataBuffer and ps6000GetValues functions in th
             
         end
         
+        % TODO: Remove sleep once driver fix for buffers available.
+        pause(2);
+        
         % Call ps6000GetValues
         [getValuesStatus, numSamples, overflow] = ...
             calllib('ps6000', 'ps6000GetValues', unitHandle, startIndex, ...

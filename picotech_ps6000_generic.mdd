@@ -6,7 +6,7 @@
    <InstrumentType>Oscilloscope</InstrumentType>
    <InstrumentManufacturer>Pico Technology Ltd.</InstrumentManufacturer>
    <InstrumentModel>PicoScope 6000 Series</InstrumentModel>
-   <InstrumentVersion>1.2.19</InstrumentVersion>
+   <InstrumentVersion>1.2.20</InstrumentVersion>
    <Identify/>
    <Reset/>
    <Selftest/>
@@ -1602,11 +1602,14 @@ For further information on the ps6000SetDataBuffers function please refer to the
 
     if (abs(voltage) &gt;= 1)
         
-        Error('Please choose threshold value between 1 and -1\n');
+        error(['PS6000IDSetExternalClock:InvalidThreshold', ...
+            'Please choose threshold value in the range ±1 V\n']);
         
     elseif(frequency &lt; 0 || frequency &gt; 4)
         
-        Error('Please choose frequency value between 0 and 4');
+        error(['PS6000IDSetExternalClock:InvalidFrequency', ... 
+            'Please choose frequency enumeration value between ' ...
+            '0 (PS6000_FREQUENCY_5MHZ) and 4 (PS6000_FREQUENCY_25MHZ)']);
         
     end
     
@@ -1615,7 +1618,7 @@ For further information on the ps6000SetDataBuffers function please refer to the
     status = calllib('ps6000', 'ps6000SetExternalClock', ...
         obj.DriverData.unitHandle, frequency, threshold);
     
-    if(status == PicoStatus.PICO_INVALID_CHANNEL)       
+    if (status == PicoStatus.PICO_INVALID_CHANNEL)       
             
         error('ps6000SetChannel: error code %d\n', status);
             
@@ -1631,7 +1634,7 @@ obj - the object representing the device.
 
 frequency - the external clock frequency (an enumeration from the  PS6000_EXTERNAL_FREQUENCY range).
 
-voltage -  the logic threshold voltage between -1 and 1V
+voltage -  the logic threshold voltage between -1 and 1 V
 
 Output parameters:
 

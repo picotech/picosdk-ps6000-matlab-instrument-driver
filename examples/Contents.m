@@ -1,4 +1,4 @@
-% PicoScope 6000 Series Instrument Driver Examples
+% PicoScope 6000 Series MATLAB Instrument Driver Examples
 %
 % Files
 %   PS6000_ID_Block_Example              - Block Data Capture Example

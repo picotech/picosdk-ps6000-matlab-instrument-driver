@@ -29,12 +29,12 @@
 % *See also:* <matlab:doc('fft') |fft|> | <matlab:doc('icdevice') |icdevice|> |
 % <matlab:doc('instrument/invoke') |invoke|>
 %
-% *Copyright:* © 2014 - 2017 Pico Technology Ltd. All rights reserved.
+% *Copyright:* © 2014 - 2017 Pico Technology Ltd. See LICENSE file for terms.
 
 %% Suggested Input Test Signal
 % This example was published using the following test signal:
 %
-% * Channel A: 4Vpp, 50Hz square wave
+% * Channel A: 4 Vpp, 50 Hz square wave
 
 %% Clear Command Window and Close any Figures
 
@@ -45,6 +45,29 @@ close all;
 PS6000Config;
 
 %% Device Connection
+
+% Check if an Instrument session using the device object 'ps6000DeviceObj'
+% is still open, and if so, disconnect if the User chooses 'Yes' when prompted.
+if (exist('ps6000DeviceObj', 'var') && ps6000DeviceObj.isvalid && strcmp(ps6000DeviceObj.status, 'open'))
+    
+    openDevice = questionDialog(['Device object ps6000DeviceObj has an open connection. ' ...
+        'Do you wish to close the connection and continue?'], ...
+        'Device Object Connection Open');
+    
+    if (openDevice == PicoConstants.TRUE)
+        
+        % Close connection to device
+        disconnect(ps6000DeviceObj);
+        delete(ps6000DeviceObj);
+        
+    else
+
+        % Exit script if User selects 'No'
+        return;
+        
+    end
+    
+end
 
 % Create a device object. 
 % The serial number can be specified as a second input parameter.
@@ -74,7 +97,7 @@ connect(ps6000DeviceObj);
 voltageRangeIndex = ps6000Enuminfo.enPS6000Range.PS6000_5V;
 coupling          = ps6000Enuminfo.enPS6000Coupling.PS6000_DC_1M;
 
-if (ps6000DeviceObj.InstrumentModel == PS6000Constants.MODEL_PS6407)
+if (strcmp(ps6000DeviceObj.InstrumentModel, PS6000Constants.MODEL_PS6407))
 
     voltageRangeIndex = ps6000Enuminfo.enPS6000Range.PS6000_100MV;
     coupling          = ps6000Enuminfo.enPS6000Coupling.PS6000_DC_50R;
@@ -147,7 +170,7 @@ set(triggerGroupObj, 'autoTriggerMs', 1000);
 
 thresholdVoltage = 500;
 
-if (ps6000DeviceObj.InstrumentModel == PS6000Constants.MODEL_PS6407)
+if (strcmp(ps6000DeviceObj.InstrumentModel, PS6000Constants.MODEL_PS6407))
    
     thresholdVoltage = 50;
     
@@ -214,7 +237,7 @@ timeMs = timeNs / 1e6;
 chAAxes = subplot(2,1,1);
 plot(chAAxes,timeMs, chA, 'b');
 
-if (ps6000DeviceObj.InstrumentModel == PS6000Constants.MODEL_PS6407)
+if (strcmp(ps6000DeviceObj.InstrumentModel, PS6000Constants.MODEL_PS6407))
     
     ylim(chAAxes, [-100 100]);
     

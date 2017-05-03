@@ -32,7 +32,7 @@
 %
 % *See also:* <matlab:doc('icdevice') |icdevice|> | <matlab:doc('instrument/invoke') |invoke|>
 %
-% *Copyright:* © 2014 - 2017 Pico Technology Ltd. All rights reserved.
+% *Copyright:* © 2014 - 2017 Pico Technology Ltd. See LICENSE file for terms.
 
 %% Test Setup
 % For this example the 'SIGNAL OUT' connector of the oscilloscope was
@@ -56,6 +56,29 @@ PS6000Config;
 
 %% Device Connection
 
+% Check if an Instrument session using the device object 'ps6000DeviceObj'
+% is still open, and if so, disconnect if the User chooses 'Yes' when prompted.
+if (exist('ps6000DeviceObj', 'var') && ps6000DeviceObj.isvalid && strcmp(ps6000DeviceObj.status, 'open'))
+    
+    openDevice = questionDialog(['Device object ps6000DeviceObj has an open connection. ' ...
+        'Do you wish to close the connection and continue?'], ...
+        'Device Object Connection Open');
+    
+    if (openDevice == PicoConstants.TRUE)
+        
+        % Close connection to device
+        disconnect(ps6000DeviceObj);
+        delete(ps6000DeviceObj);
+        
+    else
+
+        % Exit script if User selects 'No'
+        return;
+        
+    end
+    
+end
+
 % Create a device object. 
 % The serial number can be specified as a second input parameter.
 ps6000DeviceObj = icdevice('picotech_ps6000_generic.mdd');
@@ -71,7 +94,7 @@ sigGenGroupObj = get(ps6000DeviceObj, 'Signalgenerator');
 sigGenGroupObj = sigGenGroupObj(1);
 
 %% Function Generator - Simple
-% Output a Sine wave, 2000mVpp, 0mV offset, 1000Hz (uses preset values for
+% Output a Sine wave, 2000 mVpp, 0 mV offset, 1000 Hz (uses preset values for
 % offset, peak to peak voltage and frequency from the Signalgenerator
 % groups's properties).
 
@@ -83,8 +106,8 @@ sigGenGroupObj = sigGenGroupObj(1);
 % 
 
 %% Function Generator - Sweep Frequency
-% Output a square wave, 2400mVpp, 500mV offset, and sweep continuously from
-% 500Hz to 50Hz in steps of 50Hz.
+% Output a square wave, 2400 mVpp, 500 mV offset, and sweep continuously from
+% 500 Hz to 50 Hz in steps of 50 Hz.
 
 % Set Signalgenerator group properties
 set(sigGenGroupObj, 'startFrequency', 50.0); % Hz

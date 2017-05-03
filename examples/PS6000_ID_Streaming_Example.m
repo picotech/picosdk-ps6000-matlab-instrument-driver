@@ -31,13 +31,13 @@
 %
 % *See also:* <matlab:doc('icdevice') |icdevice|> | <matlab:doc('instrument/invoke') |invoke|>
 %
-% *Copyright:* © 2014 - 2017 Pico Technology Ltd. All rights reserved.
+% *Copyright:* © 2014 - 2017 Pico Technology Ltd. See LICENSE file for terms.
 
 %% Suggested Input Test Signals
 % This example was published using the following test signals:
 %
-% * Channel A: 3Vpp, 1Hz sine wave
-% * Channel B: 2Vpp, 5Hz square wave   
+% * Channel A: 3 Vpp, 1 Hz sine wave
+% * Channel B: 2 Vpp, 5 Hz square wave   
 
 %% Clear Command Window and Close any Figures
 
@@ -55,6 +55,29 @@ channelA = ps6000Enuminfo.enPS6000Channel.PS6000_CHANNEL_A;
 channelB = ps6000Enuminfo.enPS6000Channel.PS6000_CHANNEL_B;
 
 %% Device Connection
+
+% Check if an Instrument session using the device object 'ps6000DeviceObj'
+% is still open, and if so, disconnect if the User chooses 'Yes' when prompted.
+if (exist('ps6000DeviceObj', 'var') && ps6000DeviceObj.isvalid && strcmp(ps6000DeviceObj.status, 'open'))
+    
+    openDevice = questionDialog(['Device object ps6000DeviceObj has an open connection. ' ...
+        'Do you wish to close the connection and continue?'], ...
+        'Device Object Connection Open');
+    
+    if (openDevice == PicoConstants.TRUE)
+        
+        % Close connection to device
+        disconnect(ps6000DeviceObj);
+        delete(ps6000DeviceObj);
+        
+    else
+
+        % Exit script if User selects 'No'
+        return;
+        
+    end
+    
+end
 
 % Create device -  specify serial number if required
 % Specify serial number as 2nd argument if required.
@@ -80,7 +103,7 @@ channelSettings(1).range            = ps6000Enuminfo.enPS6000Range.PS6000_2V;
 channelSettings(1).analogueOffset   = 0.0;
 channelSettings(1).bandwidth        = ps6000Enuminfo.enPS6000BandwidthLimiter.PS6000_BW_FULL;
 
-if (ps6000DeviceObj.InstrumentModel == PS6000Constants.MODEL_PS6407)
+if (strcmp(ps6000DeviceObj.InstrumentModel, PS6000Constants.MODEL_PS6407))
 
     channelSettings(1).coupling         = ps6000Enuminfo.enPS6000Coupling.PS6000_DC_50R;
     channelSettings(1).range            = ps6000Enuminfo.enPS6000Range.PS6000_100MV;
@@ -96,7 +119,7 @@ channelSettings(2).range            = ps6000Enuminfo.enPS6000Range.PS6000_2V;
 channelSettings(2).analogueOffset   = 0.0;
 channelSettings(2).bandwidth        = ps6000Enuminfo.enPS6000BandwidthLimiter.PS6000_BW_FULL;
 
-if (ps6000DeviceObj.InstrumentModel == PS6000Constants.MODEL_PS6407)
+if (strcmp(ps6000DeviceObj.InstrumentModel, PS6000Constants.MODEL_PS6407))
 
     channelSettings(2).coupling         = ps6000Enuminfo.enPS6000Coupling.PS6000_DC_50R;
     channelSettings(2).range            = ps6000Enuminfo.enPS6000Range.PS6000_100MV;
@@ -112,7 +135,7 @@ channelSettings(3).range            = ps6000Enuminfo.enPS6000Range.PS6000_2V;
 channelSettings(3).analogueOffset   = 0.0;
 channelSettings(3).bandwidth        = ps6000Enuminfo.enPS6000BandwidthLimiter.PS6000_BW_FULL;
 
-if (ps6000DeviceObj.InstrumentModel == PS6000Constants.MODEL_PS6407)
+if (strcmp(ps6000DeviceObj.InstrumentModel, PS6000Constants.MODEL_PS6407))
 
     channelSettings(3).coupling         = ps6000Enuminfo.enPS6000Coupling.PS6000_DC_50R;
     channelSettings(3).range            = ps6000Enuminfo.enPS6000Range.PS6000_100MV;
@@ -126,7 +149,7 @@ channelSettings(4).range            = ps6000Enuminfo.enPS6000Range.PS6000_2V;
 channelSettings(4).analogueOffset   = 0.0;
 channelSettings(4).bandwidth        = ps6000Enuminfo.enPS6000BandwidthLimiter.PS6000_BW_FULL;
 
-if (ps6000DeviceObj.InstrumentModel == PS6000Constants.MODEL_PS6407)
+if (strcmp(ps6000DeviceObj.InstrumentModel, PS6000Constants.MODEL_PS6407))
 
     channelSettings(4).coupling         = ps6000Enuminfo.enPS6000Coupling.PS6000_DC_50R;
     channelSettings(4).range            = ps6000Enuminfo.enPS6000Range.PS6000_100MV;

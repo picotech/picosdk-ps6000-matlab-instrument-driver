@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>PicoScope 6000 Series Instrument Driver Oscilloscope Rapid Block Data Capture Example</title><meta name="generator" content="MATLAB 8.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2015-12-09"><meta name="DC.source" content="PS6000_ID_Rapid_Block_Plot3D_Example.m"><style type="text/css">
+      --><title>PicoScope 6000 Series Instrument Driver Oscilloscope Rapid Block Data Capture Example</title><meta name="generator" content="MATLAB 9.2"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-05-03"><meta name="DC.source" content="PS6000_ID_Rapid_Block_Plot3D_Example.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,21 +66,47 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>PicoScope 6000 Series Instrument Driver Oscilloscope Rapid Block Data Capture Example</h1><!--introduction--><p>This is an example of an instrument control session using a device object. The instrument control session comprises all the steps you are likely to take when communicating with your instrument.</p><p>These steps are:</p><div><ol><li>Create a device object</li><li>Connect to the instrument</li><li>Configure properties</li><li>Invoke functions</li><li>Disconnect from the instrument</li></ol></div><p>To run the instrument control session, type the name of the file, PS6000_ID_Rapid_Block_Plot3D_Example, at the MATLAB command prompt.</p><p>The file, PS6000_ID_RAPID_BLOCK_PLOT3D.M must be on your MATLAB PATH. For additional information on setting your MATLAB PATH, type 'help addpath' at the MATLAB command prompt.</p><p><b>Example:</b>     PS6000_ID_Rapid_Block_Plot3D_Example;</p><p><b>Description:</b>     Demonstrates how to set properties and call functions in order to     capture data in rapid block mode from a PicoScope 6000 Series     Oscilloscope.</p><p><b>See also:</b> <a href="matlab:doc('icdevice')"><tt>icdevice</tt></a> | <a href="matlab:doc('instrument/invoke')"><tt>invoke</tt></a></p><p><b>Copyright:</b> &copy; 2014 - 2015 Pico Technology Ltd. All rights reserved.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Suggested Input Test Signal</a></li><li><a href="#2">Clear Command Window and Close any Figures</a></li><li><a href="#3">Load Configuration Information</a></li><li><a href="#4">Device Connection</a></li><li><a href="#5">Set Channels</a></li><li><a href="#6">Set Memory Segments</a></li><li><a href="#7">Verify Timebase Index and Maximum Number of Samples</a></li><li><a href="#8">Set Simple Trigger</a></li><li><a href="#9">Setup Rapid Block Parameters and Capture Data</a></li><li><a href="#11">Process data</a></li><li><a href="#12">Disconnect Device</a></li></ul></div><h2>Suggested Input Test Signal<a name="1"></a></h2><p>This example was published using the following test signal:</p><div><ul><li>Channel A: 4Vpp Swept square wave (Start: 50Hz, Stop: 1kHz, Sweep type: Up, Increment: 50Hz, Increment Time: 10ms)</li></ul></div><h2>Clear Command Window and Close any Figures<a name="2"></a></h2><pre class="codeinput">clc;
+  </style></head><body><div class="content"><h1>PicoScope 6000 Series Instrument Driver Oscilloscope Rapid Block Data Capture Example</h1><!--introduction--><p>This is an example of an instrument control session using a device object. The instrument control session comprises all the steps you are likely to take when communicating with your instrument.</p><p>These steps are:</p><div><ol><li>Create a device object</li><li>Connect to the instrument</li><li>Configure properties</li><li>Invoke functions</li><li>Disconnect from the instrument</li></ol></div><p>To run the instrument control session, type the name of the file, PS6000_ID_Rapid_Block_Plot3D_Example, at the MATLAB command prompt.</p><p>The file, PS6000_ID_RAPID_BLOCK_PLOT3D.M must be on your MATLAB PATH. For additional information on setting your MATLAB PATH, type 'help addpath' at the MATLAB command prompt.</p><p><b>Example:</b>     PS6000_ID_Rapid_Block_Plot3D_Example;</p><p><b>Description:</b>     Demonstrates how to set properties and call functions in order to     capture data in rapid block mode from a PicoScope 6000 Series     Oscilloscope.</p><p><b>See also:</b> <a href="matlab:doc('icdevice')"><tt>icdevice</tt></a> | <a href="matlab:doc('instrument/invoke')"><tt>invoke</tt></a></p><p><b>Copyright:</b> &copy; 2014 - 2017 Pico Technology Ltd. See LICENSE file for terms.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Suggested Input Test Signal</a></li><li><a href="#2">Clear Command Window and Close any Figures</a></li><li><a href="#3">Load Configuration Information</a></li><li><a href="#4">Device Connection</a></li><li><a href="#5">Set Channels</a></li><li><a href="#6">Set Memory Segments</a></li><li><a href="#7">Verify Timebase Index and Maximum Number of Samples</a></li><li><a href="#8">Set Simple Trigger</a></li><li><a href="#9">Setup Rapid Block Parameters and Capture Data</a></li><li><a href="#11">Process data</a></li><li><a href="#12">Disconnect Device</a></li></ul></div><h2 id="1">Suggested Input Test Signal</h2><p>This example was published using the following test signal:</p><div><ul><li>Channel A: 4 Vpp Swept square wave (Start: 50 Hz, Stop: 1 kHz, Sweep type: Up, Increment: 50 Hz, Increment Time: 10 ms)</li></ul></div><h2 id="2">Clear Command Window and Close any Figures</h2><pre class="codeinput">clc;
 close <span class="string">all</span>;
-</pre><h2>Load Configuration Information<a name="3"></a></h2><pre class="codeinput">PS6000Config;
-</pre><h2>Device Connection<a name="4"></a></h2><pre class="codeinput"><span class="comment">% Create a device object.</span>
+</pre><h2 id="3">Load Configuration Information</h2><pre class="codeinput">PS6000Config;
+</pre><h2 id="4">Device Connection</h2><pre class="codeinput"><span class="comment">% Check if an Instrument session using the device object 'ps6000DeviceObj'</span>
+<span class="comment">% is still open, and if so, disconnect if the User chooses 'Yes' when prompted.</span>
+<span class="keyword">if</span> (exist(<span class="string">'ps6000DeviceObj'</span>, <span class="string">'var'</span>) &amp;&amp; ps6000DeviceObj.isvalid &amp;&amp; strcmp(ps6000DeviceObj.status, <span class="string">'open'</span>))
+
+    openDevice = questionDialog([<span class="string">'Device object ps6000DeviceObj has an open connection. '</span> <span class="keyword">...</span>
+        <span class="string">'Do you wish to close the connection and continue?'</span>], <span class="keyword">...</span>
+        <span class="string">'Device Object Connection Open'</span>);
+
+    <span class="keyword">if</span> (openDevice == PicoConstants.TRUE)
+
+        <span class="comment">% Close connection to device</span>
+        disconnect(ps6000DeviceObj);
+        delete(ps6000DeviceObj);
+
+    <span class="keyword">else</span>
+
+        <span class="comment">% Exit script if User selects 'No'</span>
+        <span class="keyword">return</span>;
+
+    <span class="keyword">end</span>
+
+<span class="keyword">end</span>
+
+<span class="comment">% Create a device object.</span>
 <span class="comment">% The serial number can be specified as a second input parameter.</span>
 ps6000DeviceObj = icdevice(<span class="string">'picotech_ps6000_generic.mdd'</span>);
 
 <span class="comment">% Connect device object to hardware.</span>
 connect(ps6000DeviceObj);
 </pre><pre class="codeoutput">
-Copyright &copy; 2014 - 2015 Pico Technology Ltd. All rights reserved.
+Copyright &copy; 2014 - 2017 Pico Technology Ltd. All rights reserved.
 
 PicoScope 6000 Series MATLAB Instrument Driver
 
-Warning: No units found. 
+Number of units found: 1
+
+Serial number(s): EW421/006
+
 Opening PicoScope 6000 Series device...
 
    Instrument Device Object Using Driver : picotech_ps6000_generic.mdd
@@ -93,7 +119,7 @@ Opening PicoScope 6000 Series device...
    Driver Information
       DriverType:         MATLAB generic
       DriverName:         picotech_ps6000_generic.mdd
-      DriverVersion:      1.2.10
+      DriverVersion:      1.2.20
  
    Communication State
       Status:             open
@@ -107,28 +133,28 @@ ChannelA:-
 	Enabled: True
 	Coupling: DC
 	Range:5V
-	Analogue Offset: 0.0V
+	Analogue Offset: 0.0 V
 	Bandwidth: Full
 
 ChannelB:-
 	Enabled: True
 	Coupling: DC
 	Range:5V
-	Analogue Offset: 0.0V
+	Analogue Offset: 0.0 V
 	Bandwidth: Full
 
 ChannelC:-
 	Enabled: True
 	Coupling: DC
 	Range:5V
-	Analogue Offset: 0.0V
+	Analogue Offset: 0.0 V
 	Bandwidth: Full
 
 ChannelD:-
 	Enabled: True
 	Coupling: DC
 	Range:5V
-	Analogue Offset: 0.0V
+	Analogue Offset: 0.0 V
 	Bandwidth: Full
 
 Turning off Equivalent Time Sampling...
@@ -159,28 +185,41 @@ Initialisation complete.
 Connected to PicoScope 6000 Series device:-
 
       Instrument Model: 6404D
-   Batch/Serial Number: CQ186/036
+   Batch/Serial Number: EW421/006
      Analogue Channels: 4
              Bandwidth: 500 MHz
          Buffer memory: 2048 MS
  Maximum sampling rate: 5 GS/s
  Signal Generator Type: Arbitrary Waveform Generator
 
-</pre><h2>Set Channels<a name="5"></a></h2><p>Default driver settings applied to channels are listed below - use ps6000SetChannel to turn channels on or off and set voltage ranges, coupling, analogue offset and bandwidth.</p><pre class="codeinput"><span class="comment">% In this example, data is only collected on Channel A so default settings</span>
+</pre><h2 id="5">Set Channels</h2><p>Default driver settings applied to channels are listed below - use ps6000SetChannel to turn channels on or off and set voltage ranges, coupling, analogue offset and bandwidth.</p><pre class="codeinput"><span class="comment">% In this example, data is only collected on Channel A so default settings</span>
 <span class="comment">% are used and Channels B, C and D are switched off.</span>
 
 <span class="comment">% Channels       : 1 - 3 (ps6000Enuminfo.enPS6000Channel.PS6000_CHANNEL_B - PS6000_CHANNEL_D)</span>
 <span class="comment">% Enabled        : 0</span>
 <span class="comment">% Type           : 1 (ps6000Enuminfo.enPS6000Coupling.PS6000_DC_1M)</span>
-<span class="comment">% Range          : 8 (ps6000Enuminfo.enPS6000Range.PS6000_5V)</span>
+<span class="comment">% Range          : 3 (ps6000Enuminfo.enPS6000Range.PS6000_100MV) for the PicoScope 6407 or</span>
+<span class="comment">%                  8 (ps6000Enuminfo.enPS6000Range.PS6000_5V) for all other PicoScope 6000 Series models</span>
 <span class="comment">% Analogue Offset: 0.0</span>
 <span class="comment">% Bandwidtht     : 0 (ps6000Enuminfo.enPS6000BandwidthLimiter.PS6000_BW_FULL)</span>
 
+<span class="comment">% Select the correct voltage range and coupling to use</span>
+
+voltageRangeIndex = ps6000Enuminfo.enPS6000Range.PS6000_5V;
+coupling          = ps6000Enuminfo.enPS6000Coupling.PS6000_DC_1M;
+
+<span class="keyword">if</span> (strcmp(ps6000DeviceObj.InstrumentModel, PS6000Constants.MODEL_PS6407))
+
+    voltageRangeIndex = ps6000Enuminfo.enPS6000Range.PS6000_100MV;
+    coupling          = ps6000Enuminfo.enPS6000Coupling.PS6000_DC_50R;
+
+<span class="keyword">end</span>
+
 <span class="comment">% Execute device object function(s).</span>
-[status.setChB] = invoke(ps6000DeviceObj, <span class="string">'ps6000SetChannel'</span>, 1, 0, 1, 8, 0.0,0);
-[status.setChC] = invoke(ps6000DeviceObj, <span class="string">'ps6000SetChannel'</span>, 2, 0, 1, 8, 0.0,0);
-[status.setChD] = invoke(ps6000DeviceObj, <span class="string">'ps6000SetChannel'</span>, 3, 0, 1, 8, 0.0,0);
-</pre><h2>Set Memory Segments<a name="6"></a></h2><p>Configure the number of memory segments and query ps6000GetMaxSegments to find the maximum number of samples for each segment.</p><pre class="codeinput"><span class="comment">% nSegments : 128</span>
+[status.setChB] = invoke(ps6000DeviceObj, <span class="string">'ps6000SetChannel'</span>, 1, 0, coupling, voltageRangeIndex, 0.0, 0);
+[status.setChC] = invoke(ps6000DeviceObj, <span class="string">'ps6000SetChannel'</span>, 2, 0, coupling, voltageRangeIndex, 0.0, 0);
+[status.setChD] = invoke(ps6000DeviceObj, <span class="string">'ps6000SetChannel'</span>, 3, 0, coupling, voltageRangeIndex, 0.0, 0);
+</pre><h2 id="6">Set Memory Segments</h2><p>Configure the number of memory segments and query ps6000GetMaxSegments to find the maximum number of samples for each segment.</p><pre class="codeinput"><span class="comment">% nSegments : 128</span>
 
 [status.memorySegments, nMaxSamples] = invoke(ps6000DeviceObj, <span class="string">'ps6000MemorySegments'</span>, 128);
 
@@ -189,7 +228,7 @@ Connected to PicoScope 6000 Series device:-
 
 set(ps6000DeviceObj, <span class="string">'numPreTriggerSamples'</span>, 2500);
 set(ps6000DeviceObj, <span class="string">'numPostTriggerSamples'</span>, 7500);
-</pre><h2>Verify Timebase Index and Maximum Number of Samples<a name="7"></a></h2><p>Use ps6000GetTimebase2 to query the driver as to suitability of using a particular timebase index and the maximum number of samples available in the segment selected (the buffer memory has not been segmented in this example) then set the 'timebase' property if required.</p><p>To use the fastest sampling interval possible, set one analogue channel and turn off all other channels.</p><p>Use a while loop to query the function until the status indicates that a valid timebase index has been selected. In this example, the timebase index of 101 is valid.</p><pre class="codeinput"><span class="comment">% Initial call to ps6000GetTimebase2 with parameters:</span>
+</pre><h2 id="7">Verify Timebase Index and Maximum Number of Samples</h2><p>Use ps6000GetTimebase2 to query the driver as to suitability of using a particular timebase index and the maximum number of samples available in the segment selected (the buffer memory has not been segmented in this example) then set the 'timebase' property if required.</p><p>To use the fastest sampling interval possible, set one analogue channel and turn off all other channels.</p><p>Use a while loop to query the function until the status indicates that a valid timebase index has been selected. In this example, the timebase index of 101 is valid.</p><pre class="codeinput"><span class="comment">% Initial call to ps6000GetTimebase2 with parameters:</span>
 <span class="comment">% timebase      : 101 (621ns)</span>
 <span class="comment">% segment index : 0</span>
 
@@ -213,7 +252,7 @@ timebaseIndex = 101;
 <span class="keyword">end</span>
 
 set(ps6000DeviceObj, <span class="string">'timebase'</span>, timebaseIndex);
-</pre><h2>Set Simple Trigger<a name="8"></a></h2><p>Set a trigger on Channel A, with an auto timeout - the default value for delay is used. The trigger will wait for a rising edge through the specified threshold unless the timeout occurs first.</p><pre class="codeinput"><span class="comment">% Trigger properties and functions are located in the Instrument</span>
+</pre><h2 id="8">Set Simple Trigger</h2><p>Set a trigger on Channel A, with an auto timeout - the default value for delay is used. The trigger will wait for a rising edge through the specified threshold unless the timeout occurs first.</p><pre class="codeinput"><span class="comment">% Trigger properties and functions are located in the Instrument</span>
 <span class="comment">% Driver's Trigger group.</span>
 
 triggerGroupObj = get(ps6000DeviceObj, <span class="string">'Trigger'</span>);
@@ -226,11 +265,19 @@ triggerGroupObj = triggerGroupObj(1);
 set(triggerGroupObj, <span class="string">'autoTriggerMs'</span>, 1000);
 
 <span class="comment">% Channel     : 0 (ps6000Enuminfo.enPS6000Channel.PS6000_CHANNEL_A)</span>
-<span class="comment">% Threshold   : 500 (mV)</span>
+<span class="comment">% Threshold   : 50 mV (for the PicoScope 6407) or 500 mV otherwise</span>
 <span class="comment">% Direction   : 2 (ps6000Enuminfo.enPS6000ThresholdDirection.PS6000_RISING)</span>
 
-[status.setSimpleTrigger] = invoke(triggerGroupObj, <span class="string">'setSimpleTrigger'</span>, 0, 500, 2);
-</pre><h2>Setup Rapid Block Parameters and Capture Data<a name="9"></a></h2><p>Capture a set of data using rapid block mode and retrieve data values for Channel A.</p><pre class="codeinput"><span class="comment">% Rapid Block specific properties and functions are located in the Instrument</span>
+thresholdVoltage = 500;
+
+<span class="keyword">if</span> (strcmp(ps6000DeviceObj.InstrumentModel, PS6000Constants.MODEL_PS6407))
+
+    thresholdVoltage = 50;
+
+<span class="keyword">end</span>
+
+[status.setSimpleTrigger] = invoke(triggerGroupObj, <span class="string">'setSimpleTrigger'</span>, 0, thresholdVoltage, 2);
+</pre><h2 id="9">Setup Rapid Block Parameters and Capture Data</h2><p>Capture a set of data using rapid block mode and retrieve data values for Channel A.</p><pre class="codeinput"><span class="comment">% Rapid Block specific properties and functions are located in the Instrument</span>
 <span class="comment">% Driver's Rapidblock group.</span>
 
 rapidBlockGroupObj = get(ps6000DeviceObj, <span class="string">'Rapidblock'</span>);
@@ -277,7 +324,7 @@ getRapidBlockData: Retrieving data...
 getRapidBlockData: Converting to milliVolts and assigning to channel array.
 getRapidBlockData: Data succesfully retrieved.
 
-</pre><h2>Process data<a name="11"></a></h2><p>Plot data values in 3D showing history.</p><pre class="codeinput"><span class="comment">% Calculate time period over which samples were taken for each waveform.</span>
+</pre><h2 id="11">Process data</h2><p>Plot data values in 3D showing history.</p><pre class="codeinput"><span class="comment">% Calculate time period over which samples were taken for each waveform.</span>
 <span class="comment">% Use the timeIntNs output from the ps6000GetTimebase2 or calculate it using</span>
 <span class="comment">% the main Programmer's Guide.</span>
 
@@ -304,11 +351,11 @@ ylabel(<span class="string">'Capture'</span>);
 zlabel(<span class="string">'Voltage (mV)'</span>);
 
 hold <span class="string">off</span>;
-</pre><img vspace="5" hspace="5" src="PS6000_ID_Rapid_Block_Plot3D_Example_01.png" alt=""> <h2>Disconnect Device<a name="12"></a></h2><p>Disconnect device object from hardware.</p><pre class="codeinput">disconnect(ps6000DeviceObj);
+</pre><img vspace="5" hspace="5" src="PS6000_ID_Rapid_Block_Plot3D_Example_01.png" alt=""> <h2 id="12">Disconnect Device</h2><p>Disconnect device object from hardware.</p><pre class="codeinput">disconnect(ps6000DeviceObj);
 delete(ps6000DeviceObj);
-</pre><pre class="codeoutput">Connection to PicoScope 6404D with serial number CQ186/036 closed successfully.
+</pre><pre class="codeoutput">Connection to PicoScope 6404D with serial number EW421/006 closed successfully.
 Libraries unloaded successfully.
-</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2017a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% PicoScope 6000 Series Instrument Driver Oscilloscope Rapid Block Data Capture Example
 % This is an example of an instrument control session using a device 
@@ -340,12 +387,12 @@ Libraries unloaded successfully.
 %   
 % *See also:* <matlab:doc('icdevice') |icdevice|> | <matlab:doc('instrument/invoke') |invoke|>
 %
-% *Copyright:* © 2014 - 2015 Pico Technology Ltd. All rights reserved.
+% *Copyright:* © 2014 - 2017 Pico Technology Ltd. See LICENSE file for terms.
 
 %% Suggested Input Test Signal
 % This example was published using the following test signal:
 %
-% * Channel A: 4Vpp Swept square wave (Start: 50Hz, Stop: 1kHz, Sweep type: Up, Increment: 50Hz, Increment Time: 10ms)
+% * Channel A: 4 Vpp Swept square wave (Start: 50 Hz, Stop: 1 kHz, Sweep type: Up, Increment: 50 Hz, Increment Time: 10 ms)
 
 %% Clear Command Window and Close any Figures
 
@@ -356,6 +403,29 @@ close all;
 PS6000Config;
 
 %% Device Connection
+
+% Check if an Instrument session using the device object 'ps6000DeviceObj'
+% is still open, and if so, disconnect if the User chooses 'Yes' when prompted.
+if (exist('ps6000DeviceObj', 'var') && ps6000DeviceObj.isvalid && strcmp(ps6000DeviceObj.status, 'open'))
+    
+    openDevice = questionDialog(['Device object ps6000DeviceObj has an open connection. ' ...
+        'Do you wish to close the connection and continue?'], ...
+        'Device Object Connection Open');
+    
+    if (openDevice == PicoConstants.TRUE)
+        
+        % Close connection to device
+        disconnect(ps6000DeviceObj);
+        delete(ps6000DeviceObj);
+        
+    else
+
+        % Exit script if User selects 'No'
+        return;
+        
+    end
+    
+end
 
 % Create a device object. 
 % The serial number can be specified as a second input parameter.
@@ -375,14 +445,27 @@ connect(ps6000DeviceObj);
 % Channels       : 1 - 3 (ps6000Enuminfo.enPS6000Channel.PS6000_CHANNEL_B - PS6000_CHANNEL_D)
 % Enabled        : 0
 % Type           : 1 (ps6000Enuminfo.enPS6000Coupling.PS6000_DC_1M)
-% Range          : 8 (ps6000Enuminfo.enPS6000Range.PS6000_5V)
+% Range          : 3 (ps6000Enuminfo.enPS6000Range.PS6000_100MV) for the PicoScope 6407 or 
+%                  8 (ps6000Enuminfo.enPS6000Range.PS6000_5V) for all other PicoScope 6000 Series models
 % Analogue Offset: 0.0
 % Bandwidtht     : 0 (ps6000Enuminfo.enPS6000BandwidthLimiter.PS6000_BW_FULL)
 
+% Select the correct voltage range and coupling to use
+
+voltageRangeIndex = ps6000Enuminfo.enPS6000Range.PS6000_5V;
+coupling          = ps6000Enuminfo.enPS6000Coupling.PS6000_DC_1M;
+
+if (strcmp(ps6000DeviceObj.InstrumentModel, PS6000Constants.MODEL_PS6407))
+
+    voltageRangeIndex = ps6000Enuminfo.enPS6000Range.PS6000_100MV;
+    coupling          = ps6000Enuminfo.enPS6000Coupling.PS6000_DC_50R;
+   
+end
+
 % Execute device object function(s).
-[status.setChB] = invoke(ps6000DeviceObj, 'ps6000SetChannel', 1, 0, 1, 8, 0.0,0);
-[status.setChC] = invoke(ps6000DeviceObj, 'ps6000SetChannel', 2, 0, 1, 8, 0.0,0);
-[status.setChD] = invoke(ps6000DeviceObj, 'ps6000SetChannel', 3, 0, 1, 8, 0.0,0);
+[status.setChB] = invoke(ps6000DeviceObj, 'ps6000SetChannel', 1, 0, coupling, voltageRangeIndex, 0.0, 0);
+[status.setChC] = invoke(ps6000DeviceObj, 'ps6000SetChannel', 2, 0, coupling, voltageRangeIndex, 0.0, 0);
+[status.setChD] = invoke(ps6000DeviceObj, 'ps6000SetChannel', 3, 0, coupling, voltageRangeIndex, 0.0, 0);
 
 %% Set Memory Segments
 % Configure the number of memory segments and query ps6000GetMaxSegments to
@@ -454,10 +537,18 @@ triggerGroupObj = triggerGroupObj(1);
 set(triggerGroupObj, 'autoTriggerMs', 1000);
 
 % Channel     : 0 (ps6000Enuminfo.enPS6000Channel.PS6000_CHANNEL_A)
-% Threshold   : 500 (mV)
+% Threshold   : 50 mV (for the PicoScope 6407) or 500 mV otherwise
 % Direction   : 2 (ps6000Enuminfo.enPS6000ThresholdDirection.PS6000_RISING)
 
-[status.setSimpleTrigger] = invoke(triggerGroupObj, 'setSimpleTrigger', 0, 500, 2);
+thresholdVoltage = 500;
+
+if (strcmp(ps6000DeviceObj.InstrumentModel, PS6000Constants.MODEL_PS6407))
+   
+    thresholdVoltage = 50;
+    
+end
+
+[status.setSimpleTrigger] = invoke(triggerGroupObj, 'setSimpleTrigger', 0, thresholdVoltage, 2);
 
 %% Setup Rapid Block Parameters and Capture Data
 % Capture a set of data using rapid block mode and retrieve data values for Channel A.

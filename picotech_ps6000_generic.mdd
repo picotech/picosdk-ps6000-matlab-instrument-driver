@@ -6,7 +6,7 @@
    <InstrumentType>Oscilloscope</InstrumentType>
    <InstrumentManufacturer>Pico Technology Ltd.</InstrumentManufacturer>
    <InstrumentModel>PicoScope 6000 Series</InstrumentModel>
-   <InstrumentVersion>1.2.17</InstrumentVersion>
+   <InstrumentVersion>1.2.18</InstrumentVersion>
    <Identify/>
    <Reset/>
    <Selftest/>
@@ -126,7 +126,10 @@
         
         error('PS6000IDCreate:ErrorCode', 'Status code: %d\n', status);
         
-    end</Code>
+    end
+    
+    % Initialise properties
+    obj.DriverData.displayOutput = obj.displayOutput;</Code>
    </CreateInitCode>
    <ConnectInitCode>
       <Type>MCode</Type>
@@ -531,6 +534,43 @@ bandwidth - an enumeration representing the bandwidth (20 MHz (6402/6403), 25Mhz
 
 
 </Description>
+            </Property>
+            <Property>
+               <Name>displayOutput</Name>
+               <Location>parent</Location>
+               <CapabilityGroup>Base</CapabilityGroup>
+               <Type>MCode</Type>
+               <Code>
+                  <GetMCode>function propertyValue = getProperty(obj, propertyName)
+% Return a property value.
+%   This function is called to return the device or group object property
+%   value. If the property is a group property, OBJ is the group object. If
+%   the property is a base device property, OBJ is the device object.
+
+    propertyValue = obj.DriverData.displayOutput;</GetMCode>
+                  <SetMCode>function set(obj, propertyName, propertyValue)
+% Set a property value.
+%   This function is called to set the device or group object property
+%   value. If the property is a group property, OBJ is the group object. If
+%   the property is a base device property, OBJ is the device object.
+
+    obj.DriverData.displayOutput = propertyValue;</SetMCode>
+               </Code>
+               <PermissibleType>
+                  <Type>Double</Type>
+                  <Constraint>enum</Constraint>
+                  <ConstraintValue>
+                     <Value>0.0</Value>
+                     <Value>1.0</Value>
+                  </ConstraintValue>
+               </PermissibleType>
+               <DefaultValue>1</DefaultValue>
+               <ReadOnly>never</ReadOnly>
+               <Description>Enumeration value to select whether to display output from function calls in the MATLAB Command Window.
+
+Set to 1 to display output, 0 to hide output.
+
+Note: Output will still be sent to the Command Window when calling the icdevice, connect and disconnect functions. Warning and error messages will still continue to be displayed from function calls.</Description>
             </Property>
             <Property>
                <Name>firstRange</Name>
@@ -1955,7 +1995,11 @@ Bandwidth	      : Full</Description>
         totalSamples = ceil((deviceObj.DriverData.numPreTriggerSamples + ...
                                 deviceObj.DriverData.numPostTriggerSamples)/ratio);
         
-        fprintf('getBlockData: Setting up data buffers...\n');
+        if (deviceObj.DriverData.displayOutput == PicoConstants.TRUE)
+        
+            fprintf('getBlockData: Setting up data buffers...\n');
+            
+        end
         
         for ch = 1:channelCount
 
@@ -1980,16 +2024,24 @@ Bandwidth	      : Full</Description>
 
         end
 
-        fprintf('getBlockData: Retrieving data...\n');
+        if (deviceObj.DriverData.displayOutput == PicoConstants.TRUE)
+        
+            fprintf('getBlockData: Retrieving data...\n');
+            
+        end
         
         % Call ps6000GetValues
         [getValuesStatus, numSamples, overflow] = ...
             calllib('ps6000', 'ps6000GetValues', unitHandle, startIndex, ...
                 totalSamples, ratio, ratioMode, segmentIndex, overflow);
         
-        if(getValuesStatus == PicoStatus.PICO_OK)
+        if (getValuesStatus == PicoStatus.PICO_OK)
             
-            fprintf('getBlockData: Assigning data to array and converting to milliVolts.\n');
+            if (deviceObj.DriverData.displayOutput == PicoConstants.TRUE)
+                
+                fprintf('getBlockData: Assigning data to array and converting to milliVolts.\n');
+                
+            end
             
             % Obtain max ADC count value
             maxADCValue = double(deviceObj.DriverData.maxADCValue);
@@ -1997,7 +2049,7 @@ Bandwidth	      : Full</Description>
             % Retrieve data values for enabled channels
             for ch = 1:channelCount
 
-                if(channelSettings(ch,1) == PicoConstants.TRUE)
+                if (channelSettings(ch,1) == PicoConstants.TRUE)
                     
                     % Obtain the index for the
                     % PicoConstants.SCOPE_INPUT_RANGES array corresponding
@@ -2038,7 +2090,11 @@ Bandwidth	      : Full</Description>
                 
             end
             
-            fprintf('getBlockData: Data succesfully retrieved.\n');
+            if (deviceObj.DriverData.displayOutput == PicoConstants.TRUE)
+            
+                fprintf('getBlockData: Data succesfully retrieved.\n');
+                
+            end
             
         else
             
@@ -2094,7 +2150,7 @@ Please also refer to the ps6000SetDataBuffer and ps6000GetValues functions in th
 % base device functions, OBJ is the device object.
 
      % Check ratio mode is not aggregated (ps6000Enuminfo.enPS6000RatioMode.PS6000_RATIO_MODE_AGGREGATE)
-    if(ratioMode ~= 1)
+    if (ratioMode ~= 1)
 
         deviceObj = get(obj, 'Parent');
         unitHandle = deviceObj.DriverData.unitHandle;
@@ -2124,13 +2180,17 @@ Please also refer to the ps6000SetDataBuffer and ps6000GetValues functions in th
         totalSamples = ceil((deviceObj.DriverData.numPreTriggerSamples + ...
                                 deviceObj.DriverData.numPostTriggerSamples)/ratio);
 
-        fprintf('getEtsBlockData: Setting up data buffers...\n');
+        if (deviceObj.DriverData.displayOutput == PicoConstants.TRUE)
+            
+            fprintf('getEtsBlockData: Setting up data buffers...\n');
+            
+        end
 
         for ch = 1:channelCount
 
             % Set Data Buffer if channel is enabled - index 1 indicates if
             % channel is enabled
-            if(channelSettings(ch,1) == PicoConstants.TRUE)
+            if (channelSettings(ch,1) == PicoConstants.TRUE)
 
                 % Store array of libpointers
                 pBuffer(ch) = libpointer('int16Ptr', zeros(totalSamples, 1, 'int16'));
@@ -2155,29 +2215,34 @@ Please also refer to the ps6000SetDataBuffer and ps6000GetValues functions in th
         setEtsTimeBufferStatus = calllib('ps6000', 'ps6000SetEtsTimeBuffer', ...
                     unitHandle, pEtsTimeBuffer, totalSamples);
                 
-        if(setEtsTimeBufferStatus ~= PicoStatus.PICO_OK)
+        if (setEtsTimeBufferStatus ~= PicoStatus.PICO_OK)
            
             error(['getEtsBlockData: ps60000SetEtsTimeBuffer returned status code %d.'...
                 'Please refer to the PicoStatus.m file.'], setEtsTimeBufferStatus);
             
         end
 
-        fprintf('getEtsBlockData: Retrieving data...\n');
-        
-        % TODO: Remove sleep once driver fix for buffers available.
-        pause(2);
+        if (deviceObj.DriverData.displayOutput == PicoConstants.TRUE)
+            
+            fprintf('getEtsBlockData: Retrieving data...\n');
+            
+        end
         
         % Call ps6000GetValues
         [getValuesStatus, numSamples, overflow] = ...
             calllib('ps6000', 'ps6000GetValues', unitHandle, startIndex, ...
             totalSamples, ratio, ratioMode, segmentIndex, overflow);
 
-        if(getValuesStatus == PicoStatus.PICO_OK)
+        if (getValuesStatus == PicoStatus.PICO_OK)
             
             % Retrieve ETS times
             etsTimes = pEtsTimeBuffer.Value;
 
-            fprintf('getEtsBlockData: Assigning data to arrays and converting to millivolts.\n');
+            if (deviceObj.DriverData.displayOutput == PicoConstants.TRUE)
+                
+                fprintf('getEtsBlockData: Assigning data to arrays and converting to millivolts.\n');
+                
+            end
 
             % Obtain max ADC count value
             maxADCValue = double(deviceObj.DriverData.maxADCValue);
@@ -2185,7 +2250,7 @@ Please also refer to the ps6000SetDataBuffer and ps6000GetValues functions in th
             % Retrieve data values for enabled channels
             for ch = 1:channelCount
 
-                if(channelSettings(ch,1) == PicoConstants.TRUE)
+                if (channelSettings(ch,1) == PicoConstants.TRUE)
 
                     % Obtain the index for the
                     % PicoConstants.SCOPE_INPUT_RANGES array corresponding
@@ -2226,7 +2291,11 @@ Please also refer to the ps6000SetDataBuffer and ps6000GetValues functions in th
 
             end
 
-            fprintf('getEtsBlockData: Data succesfully retrieved.\n');
+            if (deviceObj.DriverData.displayOutput == PicoConstants.TRUE)
+                
+                fprintf('getEtsBlockData: Data succesfully retrieved.\n');
+                
+            end
 
         else
 
@@ -2472,14 +2541,18 @@ For further information on the ps6000IsReady function please refer to the PicoSc
     postTriggerSamples  = deviceObj.DriverData.numPostTriggerSamples;
     oversample          = 1;
     
-    fprintf('runBlock:- Collecting block of data:\n\tTimebase: %u\n\tPre-trigger samples: %u\n\tPost-trigger samples: %u\n', ...
-        timebaseIndex, preTriggerSamples, postTriggerSamples);
+    if (deviceObj.DriverData.displayOutput == PicoConstants.TRUE)
+        
+        fprintf('runBlock:- Collecting block of data:\n\tTimebase: %u\n\tPre-trigger samples: %u\n\tPost-trigger samples: %u\n', ...
+            timebaseIndex, preTriggerSamples, postTriggerSamples);
+        
+    end
 
     [status, timeIndisposedMs] = calllib('ps6000', 'ps6000RunBlock', ...
         unitHandle, preTriggerSamples, postTriggerSamples, ...
         timebaseIndex, oversample, timeIndisposedMs, segmentIndex, lpReady, pParameter);
     
-    if(status ~= PicoStatus.PICO_OK)
+    if (status ~= PicoStatus.PICO_OK)
            
         error('ps6000RunBlock:- Status code: %d. Please refer to the PicoStatus.m file.', status); 
         
@@ -2520,7 +2593,7 @@ For further information on the ps6000RunBlock function please refer to the PicoS
     
     unitHandle = deviceObj.DriverData.unitHandle;
     
-    if(mode == evalin('base', 'ps6000Enuminfo.enPS6000EtsMode.PS6000_ETS_OFF'))
+    if (mode == evalin('base', 'ps6000Enuminfo.enPS6000EtsMode.PS6000_ETS_OFF'))
         
         [status, sampleTimePicoSeconds] = calllib('ps6000', 'ps6000SetEts', ...
                 unitHandle, mode, etsCycles, etsInterleave, sampleTimePicoSeconds);
@@ -2533,19 +2606,19 @@ For further information on the ps6000RunBlock function please refer to the PicoS
 
         etsRatio = etsCycles / etsInterleave;
 
-        if(etsRatio &lt; 2 || etsRatio &gt; 5)
+        if (etsRatio &lt; 2 || etsRatio &gt; 5)
 
             error('ps6000SetEts: etsCycles must be between two and five times the value of etsInterleave');
 
         end
 
-        if(etsCycles &gt; PS6000Constants.PS6000_MAX_ETS_CYCLES)
+        if (etsCycles &gt; PS6000Constants.PS6000_MAX_ETS_CYCLES)
             
             error('ps6000SetEts: Number of ETS cycles has exceeded the maximum (%d).', PS6000Constants.PS6000_MAX_ETS_CYCLES);
             
         end
         
-        if(etsInterleave &gt; PS6000Constants.PS6000_MAX_ETS_INTERLEAVE) 
+        if (etsInterleave &gt; PS6000Constants.PS6000_MAX_ETS_INTERLEAVE) 
             
             error('ps6000SetEts: Number of waveforms has exceeded the maximum (%d).', PS6000Constants.PS6000_MAX_ETS_INTERLEAVE);
             
@@ -2598,7 +2671,7 @@ For further information on the ps6000SetEts function please refer to the PicoSco
     status = calllib('ps6000', 'ps6000SetEtsTimeBuffer', ...
         deviceObj.DriverData.unitHandle, pEtsTimeBuffer, length(pEtsTimeBuffer.Value));
     
-    if(status ~= PicoStatus.PICO_OK)
+    if (status ~= PicoStatus.PICO_OK)
            
         error('ps6000SetEtsTimeBuffer: Status code %d. Please refer to the PicoStatus.m file.', status);
         
@@ -2645,20 +2718,28 @@ For further information on the ps6000SetEtsTimeBuffer function please refer to t
     preTriggerSamples = deviceObj.DriverData.numPreTriggerSamples;
     postTriggerSamples = deviceObj.DriverData.numPostTriggerSamples;
 
-    fprintf('runBlock:- Collecting block of data:\n\tTimebase: %u\n\tPre-trigger samples: %u\n\tPost-trigger samples: %u\n', ...
-        timebaseIndex, preTriggerSamples, postTriggerSamples);
+    if (deviceObj.DriverData.displayOutput == PicoConstants.TRUE)
+        
+        fprintf('runBlock:- Collecting block of data:\n\tTimebase: %u\n\tPre-trigger samples: %u\n\tPost-trigger samples: %u\n', ...
+            timebaseIndex, preTriggerSamples, postTriggerSamples);
+        
+    end
 
    [runBlockStatus, timeIndisposedMs] = calllib('ps6000', 'ps6000RunBlock', ...
         unitHandle, preTriggerSamples, postTriggerSamples, ...
         timebaseIndex,overSample, timeIndisposedMs,segmentIndex, lpReady, pParameter);
 
-    if(runBlockStatus ~= PicoStatus.PICO_OK)
+    if (runBlockStatus ~= PicoStatus.PICO_OK)
            
         error('runBlock: Error in ps6000RunBlock call - code %d', runBlockStatus); 
         
     end
  
-    fprintf('runBlock: Waiting for device to become ready...\n');
+    if (deviceObj.DriverData.displayOutput == PicoConstants.TRUE)
+        
+        fprintf('runBlock: Waiting for device to become ready...\n');
+        
+    end
   
     ready = 0; % Initialise value for pointer
 
@@ -2667,7 +2748,7 @@ For further information on the ps6000SetEtsTimeBuffer function please refer to t
         [readyStatus, ready] = calllib('ps6000', 'ps6000IsReady', ...
                                 unitHandle, ready);
                         
-        if(readyStatus == PicoStatus.PICO_OK || readyStatus == PicoStatus.PICO_BUSY)
+        if (readyStatus == PicoStatus.PICO_OK || readyStatus == PicoStatus.PICO_BUSY)
            
             % Do nothing
             
@@ -2679,10 +2760,14 @@ For further information on the ps6000SetEtsTimeBuffer function please refer to t
                         
     end
     
-    fprintf('runBlock: Device ready.\n\n');
+    if (deviceObj.DriverData.displayOutput == PicoConstants.TRUE)
+        
+        fprintf('runBlock: Device ready.\n\n');
+        
+    end
     
     % Other conditions would have been captured.
-    if(runBlockStatus == PicoStatus.PICO_OK &amp;&amp; readyStatus == PicoStatus.PICO_OK)
+    if (runBlockStatus == PicoStatus.PICO_OK &amp;&amp; readyStatus == PicoStatus.PICO_OK)
         
         status = PicoStatus.PICO_OK;
         
@@ -2742,7 +2827,7 @@ For further information on the  ps6000RunBlock and ps6000IsReady functions pleas
 % base device functions, OBJ is the device object.
 
     % Check ratio mode is not aggregated
-    if(ratioMode ~= evalin('base', 'ps6000Enuminfo.enPS6000RatioMode.PS6000_RATIO_MODE_AGGREGATE'))
+    if (ratioMode ~= evalin('base', 'ps6000Enuminfo.enPS6000RatioMode.PS6000_RATIO_MODE_AGGREGATE'))
         
         deviceObj = get(obj, 'Parent');
         unitHandle = deviceObj.DriverData.unitHandle;
@@ -2785,7 +2870,7 @@ For further information on the  ps6000RunBlock and ps6000IsReady functions pleas
                         unitHandle, (ch - 1), pBuffer(ch, segment), totalSamples, ...
                         (segment - 1), ratioMode);
 
-                    if(setBufferStatus(ch, segment) ~= PicoStatus.PICO_OK)
+                    if (setBufferStatus(ch, segment) ~= PicoStatus.PICO_OK)
 
                         error('getRapidBlockData: Set Data Buffer for Channel %d Segment % error code %d', ...
                             (ch - 1), (segment - 1), setBufferStatus);
@@ -2798,7 +2883,11 @@ For further information on the  ps6000RunBlock and ps6000IsReady functions pleas
 
         end
 
-        fprintf('getRapidBlockData: Retrieving data...\n');
+        if (deviceObj.DriverData.displayOutput == PicoConstants.TRUE)
+            
+            fprintf('getRapidBlockData: Retrieving data...\n');
+            
+        end
         
         fromSegmentIndex = 0;
         toSegmentIndex = numCaptures - 1;
@@ -2814,9 +2903,13 @@ For further information on the  ps6000RunBlock and ps6000IsReady functions pleas
         
         overflow = overflowPtr.Value;
         
-        if(getValuesBulkStatus == PicoStatus.PICO_OK)
+        if (getValuesBulkStatus == PicoStatus.PICO_OK)
             
-            fprintf('getRapidBlockData: Converting to milliVolts and assigning to channel array.\n');
+            if (deviceObj.DriverData.displayOutput == PicoConstants.TRUE)
+                
+                fprintf('getRapidBlockData: Converting to milliVolts and assigning to channel array.\n');
+                
+            end
             
             % Obtain max ADC count value
             maxADCValue = double(deviceObj.DriverData.maxADCValue);
@@ -2824,7 +2917,7 @@ For further information on the  ps6000RunBlock and ps6000IsReady functions pleas
             % Retrieve data values for enabled channels
             for ch = 1:channelCount
 
-                if(channelSettings(ch,1) == PicoConstants.TRUE)
+                if (channelSettings(ch,1) == PicoConstants.TRUE)
                     
                     scopeInputIndex = channelSettings(ch, 3) + 1;
                     voltageRange = PicoConstants.SCOPE_INPUT_RANGES(scopeInputIndex);
@@ -2839,7 +2932,7 @@ For further information on the  ps6000RunBlock and ps6000IsReady functions pleas
                     
                     bufferMatrix = [];
                     
-                    if(numCaptures &gt; 1)
+                    if (numCaptures &gt; 1)
                         
                         bufferMatrix = horzcat(bufferCell{1:end});
                         
@@ -2884,7 +2977,11 @@ For further information on the  ps6000RunBlock and ps6000IsReady functions pleas
                 
             end
             
-            fprintf('getRapidBlockData: Data succesfully retrieved.\n\n');
+            if (deviceObj.DriverData.displayOutput == PicoConstants.TRUE)
+                
+                fprintf('getRapidBlockData: Data succesfully retrieved.\n\n');
+                
+            end
             
             clear pBuffer;
             

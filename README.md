@@ -35,7 +35,6 @@ The driver will work with the following PicoScope models:
 **Notes:**
 
 * MATLAB 2015b is recommended for 32-bit versions of MATLAB on Microsoft Windows operating systems.
-* Support for MATLAB on Mac OS X is limited. Please contact our [Technical Support Team](https://github.com/picotech/picosdk-ps6000-matlab-instrument-driver#obtaining-support) for further information.
 
 ### Installing drivers
 
@@ -48,10 +47,6 @@ Drivers are available for the following platforms. Refer to the subsections belo
 #### Linux
 
 * Follow the instructions from our [Linux Software & Drivers for Oscilloscopes and Data Loggers](https://www.picotech.com/downloads/linux) to install the required libps6000 and libpswrappers driver packages.
-
-#### Mac OS X
-
-* Visit our [Downloads page](https://www.picotech.com/downloads) and download the PicoScope Beta for Mac OS X application. Contact our [Technical Support Team](https://github.com/picotech/picosdk-ps6000-matlab-instrument-driver#obtaining-support) for further information.
 
 ### Programmer's Guides
 
@@ -73,8 +68,6 @@ picosdk-ps6000-matlab-instrument-driver is Copyright (C) 2014 - 2017 Pico Techno
 is a trademark of The Mathworks, Inc.
 
 *Windows* is a registered trademark of Microsoft Corporation. 
-
-*Mac* and *OS X* are registered trademarks of Apple, Inc. 
 
 *Linux* is the registered trademark of Linus Torvalds in the U.S. and other countries.
 

@@ -61,6 +61,8 @@ You can download the [Programmer's Guide](https://www.picotech.com/download/manu
 
 Please visit our [Support page](https://www.picotech.com/tech-support) to contact us directly or visit our [Test and Measurement Forum](https://www.picotech.com/support/forum71.html) to post questions.
 
+Issues can be reported via the [Issues tab](https://github.com/picotech/picosdk-ps6000-matlab-instrument-driver/issues).
+
 Please leave a comment and rating for this submission on our [MATLAB Central File Exchange page](https://uk.mathworks.com/matlabcentral/fileexchange/48311-picoscope-6000-series-matlab-generic-instrument-driver).
 
 ## Copyright and licensing

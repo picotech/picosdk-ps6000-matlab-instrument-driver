@@ -52,6 +52,16 @@ Drivers are available for the following platforms. Refer to the subsections belo
 
 You can download the [Programmer's Guide](https://www.picotech.com/download/manuals/picoscope-6000-series-programmers-guide.pdf) providing a description of the API functions for the ps6000 shared library used by this Instrument Driver.
 
+## Further information
+
+For further information on MATLAB and the Instrument Control Toolbox, please visit:
+
+http://www.mathworks.co.uk/products/instrument/
+
+To view Pico Technology's Hardware Support page, please visit:
+
+http://www.mathworks.co.uk/hardware-support/picoscope.html
+
 ## Obtaining support
 
 Please visit our [Support page](https://www.picotech.com/tech-support) to contact us directly or visit our [Test and Measurement Forum](https://www.picotech.com/support/forum71.html) to post questions.

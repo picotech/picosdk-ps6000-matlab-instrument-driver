@@ -3098,6 +3098,50 @@ Channel data will be returned as an array in the form numSamples x numCaptures. 
 Please also refer to the  ps6000SetDataBuffer and ps6000GetValues functions as well as the PicoScope 6000 Series PC Oscilloscopes Programmer's Guide.</Description>
             </Method>
             <Method>
+               <Name>getTriggerInfoBulk</Name>
+               <Location>rapidblock</Location>
+               <CapabilityGroup>Base</CapabilityGroup>
+               <Type>MCode</Type>
+               <Code>
+                  <MCode>function [status, triggerInfo] = getTriggerInfoBulk(obj, triggerInfo, fromSegmentIndex, toSegmentIndex)
+% For group functions, OBJ is the group object. For
+% base device functions, OBJ is the device object.
+
+deviceObj = get(obj, 'Parent');
+
+pTriggerInfo = libpointer('tPS6000TriggerInfoPtr',triggerInfo);
+%%
+status = calllib('ps6000', 'ps6000GetTriggerInfoBulk', deviceObj.DriverData.unitHandle, pTriggerInfo, fromSegmentIndex, toSegmentIndex);
+
+if (status ~= PicoStatus.PICO_OK)
+    error('Picotech:PS6000InstrumentDriver:ps5000aGetTriggerInfoBulk', ...
+                    ['ps6000GetTriggerInfoBulk has returned status code ', ...
+                     num2str(status), ' (0x' dec2hex(status), '). Please refer to PicoStatus.m for further information.' ]);
+end
+
+%%
+triggerInfo(1)=pTriggerInfo.Value;
+
+for i = 1:(toSegmentIndex-fromSegmentIndex)
+    TriggerInfoPtrInc = pTriggerInfo+i;
+    triggerInfo(i+1) = TriggerInfoPtrInc.Value;
+end</MCode>
+               </Code>
+               <Description>getTriggerInfoBulk(obj, triggerInfo, fromSegmentIndex, toSegmentIndex) retrieves the trigger infromation from waveforms captured during a rapid block capture
+
+Input Parameters
+
+obj - the device group object
+triggerInfo - structure array of 1 or more MATLAB structures corresponding to the tPS6000TriggerInfo structure (accessable from the PS6000Structs struct)
+fromSegmentIndex - integer relating to the first segement to retrieve trigger data from
+toSegmentIndex - integer relating to the last segment to retrieve tirgger data from
+
+Function Outputs
+
+status - status code returned by the device.
+triggerInfo -  structure array of 1 or more MATLAB structures corresponding to the tPS6000TriggerInfo structure (accessable from the PS6000Structs struct) that has been populated with the trigger info data</Description>
+            </Method>
+            <Method>
                <Name>ps6000GetNoOfCaptures</Name>
                <Location>rapidblock</Location>
                <CapabilityGroup>Base</CapabilityGroup>
